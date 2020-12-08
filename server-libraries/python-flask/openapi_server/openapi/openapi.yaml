@@ -1,0 +1,5198 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: k.khoury@k-ren.gr
+    name: Atman IoT
+    url: http://atman-iot.com/
+  description: Atman IoT Server
+  license:
+    name: LICENCE
+    url: ./api/licence.html
+  termsOfService: ./api/licence.html
+  title: Atman IoT
+  version: 3.0.1
+servers:
+- url: https://atman-iot.com/api
+paths:
+  /asset:
+    post:
+      description: Used for creating a new <b>Asset</b>, by an authorized <b>User</b>,
+        identified by the provided <i>token</i>. An <b>Asset</b> is a way of logical
+        grouping of <b>Devices</b>. One <b>Asset</b> can contain many <b>Devices</b>
+        and can belong to one <b>AssetGroup</b>. <br><br><i><b>References:</b> <a
+        href="/documentation.html#atman-iot-assetgroupcontroller" target="_blank">AssetGroupController</a>,
+        <a href="/documentation.html#atman-iot-devicecontroller" target="_blank">DeviceController</a>,
+        <a href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsasset" target="_blank">AssetModel</a></i>
+      operationId: asset_controller_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetExcluding_id_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+          description: Returns created Asset model instance
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetController
+      x-controller-name: AssetController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.asset_controller_controller
+  /asset-group/user:
+    post:
+      operationId: asset_group_controller_create_asset_group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetGroupExcluding_id-userId_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetGroup'
+          description: Returns created AssetGroup model instance
+        "401":
+          description: User is not authorized
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetGroupController
+      x-controller-name: AssetGroupController
+      x-operation-name: createAssetGroup
+      x-openapi-router-controller: openapi_server.controllers.asset_group_controller_controller
+  /asset-group/{id}:
+    delete:
+      operationId: asset_group_controller_delete_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: AssetGroup model instance deletion verification
+        "401":
+          description: User is not authorized
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetGroupController
+      x-controller-name: AssetGroupController
+      x-operation-name: deleteById
+      x-openapi-router-controller: openapi_server.controllers.asset_group_controller_controller
+    patch:
+      description: Edit (PATCH) AssetGroup
+      operationId: asset_group_controller_update_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetGroupExcluding_id-userId_'
+        x-parameter-index: 2
+      responses:
+        "204":
+          description: AssetGroup PATCH success
+        "401":
+          description: User is not authorized
+        "404":
+          description: AssetGroup not found
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetGroupController
+      x-controller-name: AssetGroupController
+      x-operation-name: updateById
+      x-openapi-router-controller: openapi_server.controllers.asset_group_controller_controller
+  /asset-groups/user:
+    get:
+      operationId: asset_group_controller_find_user_asset_groups
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AssetGroup'
+                type: array
+          description: Returns Array of user's AssetGroup model instances
+        "401":
+          description: User is not authorized
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetGroupController
+      x-controller-name: AssetGroupController
+      x-operation-name: findUserAssetGroups
+      x-openapi-router-controller: openapi_server.controllers.asset_group_controller_controller
+  /asset/by-name/{assetName}:
+    get:
+      description: Used for getting the <b>Asset</b> identified by <i>assetName</i>,
+        by an authorized <b>User</b> or <b>Virtual User</b> identified by the provided
+        <i>token</i>. An <b>Asset</b> is a way of logical grouping of <b>Devices</b>.
+        One <b>Asset</b> can contain many <b>Devices</b> and can belong to one <b>AssetGroup</b>.<br><br><i><b>References:</b>
+        <a href="/documentation.html#atman-iot-assetgroupcontroller" target="_blank">AssetGroupController</a>,
+        <a href="/documentation.html#atman-iot-devicecontroller" target="_blank">DeviceController</a>,
+        <a href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsasset" target="_blank">AssetModel</a></i>
+      operationId: asset_controller_find_by_name
+      parameters:
+      - explode: false
+        in: path
+        name: assetName
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+          description: Returns Asset model instance that matches provided Asset name
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetController
+      x-controller-name: AssetController
+      x-operation-name: find_by_name
+      x-openapi-router-controller: openapi_server.controllers.asset_controller_controller
+  /asset/{id}:
+    delete:
+      description: Used for deleting an <b>Asset</b>, identified by <i>id</i> by an
+        authorized <b>User</b> identified by the provided <i>token</i>. <br><br><i><b>References:</b>
+        <a href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsasset" target="_blank">AssetModel</a></i>
+      operationId: asset_controller_delete_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: Asset model instance deletion verification
+        "401":
+          description: User is not authorized
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetController
+      x-controller-name: AssetController
+      x-operation-name: deleteById
+      x-openapi-router-controller: openapi_server.controllers.asset_controller_controller
+    patch:
+      description: Edit (Patch) Asset by Id
+      operationId: asset_controller_update_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetExcluding_id-assetGroupId_'
+        x-parameter-index: 2
+      responses:
+        "204":
+          description: Asset PATCH success
+        "401":
+          description: User is not authorized
+        "404":
+          description: Asset not found
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetController
+      x-controller-name: AssetController
+      x-operation-name: updateById
+      x-openapi-router-controller: openapi_server.controllers.asset_controller_controller
+  /assets/by-user/{userId}:
+    get:
+      description: Used for getting the <b>Assets</b> of an authorized <b>User</b>
+        identified by the provided <i>userId</i>, by an authorized <b>Admin</b>. An
+        <b>Asset</b> is a way of logical grouping of <b>Devices</b>. One <b>Asset</b>
+        can contain many <b>Devices</b> and can belong to one <b>AssetGroup</b>.<br><br><i><b>References:</b>
+        <a href="/documentation.html#atman-iot-assetgroupcontroller" target="_blank">AssetGroupController</a>,
+        <a href="/documentation.html#atman-iot-devicecontroller" target="_blank">DeviceController</a>,
+        <a href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsasset" target="_blank">AssetModel</a></i>
+      operationId: asset_controller_find_by_user_id
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Asset'
+                type: array
+          description: Returns array of Asset model instances that matches provided
+            User Id
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetController
+      x-controller-name: AssetController
+      x-operation-name: find_by_userId
+      x-openapi-router-controller: openapi_server.controllers.asset_controller_controller
+  /assets/{assetGroupId}:
+    get:
+      description: Used for getting the <b>Assets</b> belonging to an <b>AssetGroup</b>,
+        in turn belonging to an authorized <b>User</b> or <b>Virtual User</b>.  An
+        <b>Asset</b> is a way of logical grouping of <b>Devices</b>. One <b>Asset</b>
+        can contain many <b>Devices</b> and can belong to the <b>AssetGroup</b> with
+        the provided <i>assetGroupId</i>. An <b>AssetGroup</b> can have many <b>Assets</b>.
+        <i><b>. <br><br>References:</b> <a href="/documentation.html#atman-iot-assetgroupcontroller"
+        target="_blank">AssetGroupController</a>, <a href="/documentation.html#atman-iot-devicecontroller"
+        target="_blank">DeviceController</a>, <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocsasset"
+        target="_blank">AssetModel</a></i>
+      operationId: asset_controller_find
+      parameters:
+      - explode: false
+        in: path
+        name: assetGroupId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Asset'
+                type: array
+          description: Returns Array of Asset model instances in AssetGroup with provided
+            id
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - AssetController
+      x-controller-name: AssetController
+      x-operation-name: find
+      x-openapi-router-controller: openapi_server.controllers.asset_controller_controller
+  /dashboard-element:
+    post:
+      operationId: dashboard_element_controller_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewDashboardElement'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardElement'
+          description: Create DashboardElement
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DashboardElementController
+      x-controller-name: DashboardElementController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.dashboard_element_controller_controller
+  /dashboard-element/{id}:
+    delete:
+      operationId: dashboard_element_controller_delete_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: DashboardElement DELETE success
+      security:
+      - bearerAuth: []
+      tags:
+      - DashboardElementController
+      x-controller-name: DashboardElementController
+      x-operation-name: deleteById
+      x-openapi-router-controller: openapi_server.controllers.dashboard_element_controller_controller
+  /dashboard-element/{id}/move-down:
+    patch:
+      operationId: dashboard_element_controller_move_element_down
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: Move up Dashboard Element success
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DashboardElementController
+      x-controller-name: DashboardElementController
+      x-operation-name: moveElementDown
+      x-openapi-router-controller: openapi_server.controllers.dashboard_element_controller_controller
+  /dashboard-element/{id}/move-up:
+    patch:
+      operationId: dashboard_element_controller_move_element_up
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: Move up Dashboard Element success
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DashboardElementController
+      x-controller-name: DashboardElementController
+      x-operation-name: moveElementUp
+      x-openapi-router-controller: openapi_server.controllers.dashboard_element_controller_controller
+  /dashboard-elements/asset-id/{assetId}/user-id/{userId}/location/{location}:
+    get:
+      operationId: dashboard_element_controller_find_by_user_id_asset_id_location
+      parameters:
+      - explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: location
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DashboardElementWithScope'
+                type: array
+          description: Array of DashboardElement model instances
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DashboardElementController
+      x-controller-name: DashboardElementController
+      x-operation-name: findByUserIdAssetIdLocation
+      x-openapi-router-controller: openapi_server.controllers.dashboard_element_controller_controller
+  /data-logger:
+    post:
+      description: Used for creating a new <b>DataLogger</b> by and authorized <b>User</b>,
+        identified by the provided <i>token</i>. <br><br><i><b>References:</b> <a
+        href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsdatalogger" target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataLoggerExcluding_id-authToken-config-userId_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataLogger'
+          description: Returns created DataLogger model instance
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-logger/data-from-csv/{id}/{dataLoggerToken}:
+    post:
+      description: Used for receiving data, sent in CSV format by a <b>DataLogger</b>
+        identified by <i>id</i> and <i>dataLoggerToken</i>. If the <b>DataLogger</b>
+        is sending data via FTP, endpoint is called internally.<br><br><i><b>References:</b>
+        <a href="/documentation.html#tocsdatalogger" target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_upload_data_from_csv
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: dataLoggerToken
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+            x-parser: stream
+        description: multipart/form-data value.
+        required: true
+        x-parameter-index: 2
+      responses:
+        "204":
+          description: File upload verification
+        "406":
+          description: Request is not acceptable. Check response for help
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: uploadData_fromCsv
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-logger/data-from-xml/{id}/{dataLoggerToken}:
+    post:
+      description: Used for receiving data, sent in XML format by a <b>DataLogger</b>
+        identified by <i>id</i> and <i>dataLoggerToken</i>. If the <b>DataLogger</b>
+        is sending data via FTP, endpoint is called internally.<br><br><i><b>References:</b>
+        <a href="/documentation.html#tocsdatalogger" target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_upload_data_from_xml
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: dataLoggerToken
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+            x-parser: stream
+        description: multipart/form-data value.
+        required: true
+        x-parameter-index: 2
+      responses:
+        "204":
+          description: File upload verification
+        "406":
+          description: Request is not acceptable. Check response for help
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: uploadData_fromXml
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-logger/setup-ftp/step1/{id}/{dataLoggerToken}:
+    post:
+      description: Step 1 of setup process of <b>DataLoggers</b> sending data via
+        FTP. It is used for sending a sample uncompressed <i>file</i> containing raw
+        data, as it was generated by the <b>DataLogger</b> (hardware) identified by
+        <i>dataLoggerToken</i>.<br><br><i><b>References:</b> <a href="/documentation.html#tocsdatalogger"
+        target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_setup_from_ftp_1
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: dataLoggerToken
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+            x-parser: stream
+        description: multipart/form-data value.
+        required: true
+        x-parameter-index: 2
+      responses:
+        "204":
+          description: File upload verification
+        "406":
+          description: Request is not acceptable. Check response for help
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: setupFromFtp_1
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-logger/setup-ftp/step2/csv/{id}:
+    post:
+      description: Step 2 of setup process of <b>DataLoggers</b> sending CSV data
+        via FTP. It is used for mapping properties of the sent <i>file</i> to properties
+        of models in the system. <b>DataLogger</b> to be setup, is identified by <i>id</i>
+        and <b>User</b> performing operation is identified by <i>token</i>. Endpoint
+        response represents the results of the mapping (required in Step 3). If it
+        is satisfactory, it is saved by setting the property <i>confirm</i> to <i>true</i>.<br><br><i><b>References:</b>
+        <a href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsdatalogger" target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_setup_from_ftp_csv_2
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestDataLoggerSetupCsv2Excluding_fileFormat_'
+        x-parameter-index: 2
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDataLoggerSetupStep2'
+          description: Data logger configuration file
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: setupFromFtp_csv_2
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-logger/setup-ftp/step2/xml/{id}:
+    post:
+      description: Step 2 of setup process of <b>DataLoggers</b> sending XML data
+        via FTP. It is used for mapping properties of the sent <i>file</i> to properties
+        of models in the system. <b>DataLogger</b> to be setup, is identified by <i>id</i>
+        and <b>User</b> performing operation is identified by <i>token</i>. Endpoint
+        response represents the results of the mapping (required in Step 3). If it
+        is satisfactory, it is saved by setting the property <i>confirm</i> to <i>true</i>.<br><br><i><b>References:</b>
+        <a href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsdatalogger" target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_setup_from_ftp_xml_2
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestDataLoggerSetupXml2Excluding_fileFormat_'
+        x-parameter-index: 2
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDataLoggerSetupStep2'
+          description: Data logger configuration JSON
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: setupFromFtp_Xml_2
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-logger/setup-ftp/step3/{id}:
+    post:
+      description: Step 3 of setup process of <b>DataLoggers</b> sending data via
+        FTP. It is used for initiating <b>DeviceTypes</b>, <b>ChannelTypes</b> and
+        <b>Devices</b>. Accepts as input the output of Step 2. Make sure that the
+        <i>manufacturer</i> property is added.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-devicecontroller"
+        target="_blank">DeviceController</a>, <a href="/documentation.html#atman-iot-devicetypecontroller"
+        target="_blank">DeviceTypeController</a>, <a href="/documentation.html#atman-iot-devicetypechanneltypecontroller"
+        target="_blank">DeviceTypeChannelTypeController</a>, <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocsdatalogger"
+        target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_setup_from_ftp_3
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseDataLoggerSetupStep2'
+        x-parameter-index: 2
+      responses:
+        "204":
+          description: 'Data logger devices initiation verification '
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: setupFromFtp_3
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-logger/{id}:
+    delete:
+      description: Deletes a<b> DataLogger</b> identified by <i>id</i>, owned by a
+        <b>User</b> identified by the provided <i>token.</i><br><br><i><b>References:</b>
+        <a href="/documentation.html#atman-iot-usercontroller" target="_blank">UserController</a>,
+        <a href="/documentation.html#tocsdatalogger" target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_delete_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: DataLogger model instance deletion verification
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: deleteById
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  /data-loggers:
+    get:
+      description: Returns an array of <b>DataLoggers</b> owned by a <b>User</b> identified
+        by the provided <i>token.</i><br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocsdatalogger"
+        target="_blank">DataLoggerModel</a></i>
+      operationId: data_logger_controller_find
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DataLogger'
+                type: array
+          description: Returns Array of DataLogger model instances
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DataLoggerController
+      x-controller-name: DataLoggerController
+      x-operation-name: find
+      x-openapi-router-controller: openapi_server.controllers.data_logger_controller_controller
+  ? /device-channel/data-by-period/{deviceId}/{channelId}/from/{fromTS}/to/{toTs}/page/{page}/count/{count}/groupBy/{groupBy}/operation/{operation}
+  : get:
+      operationId: device_channel_controller_find_by_period
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: fromTS
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: toTs
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: page
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: count
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: groupBy
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: operation
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDeviceChannelData'
+          description: Device Channel Data by time window.
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceChannelController
+      x-controller-name: DeviceChannelController
+      x-operation-name: find_by_period
+      x-openapi-router-controller: openapi_server.controllers.device_channel_controller_controller
+  /device-channel/data-last-timestamp-by-name/{serialNo}/{channelName}:
+    post:
+      operationId: device_channel_controller_find_device_channel_last_ts_sn_ch_name
+      parameters:
+      - explode: false
+        in: path
+        name: serialNo
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: channelName
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDeviceChannelData'
+          description: Channel Data of last available timestmp, queried by device
+            SN and channel name.
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceChannelController
+      x-controller-name: DeviceChannelController
+      x-operation-name: findDeviceChannelLastTS_sn_ch_name
+      x-openapi-router-controller: openapi_server.controllers.device_channel_controller_controller
+  /device-channel/data-last-timestamp/all-channels/{deviceId}:
+    get:
+      operationId: device_channel_controller_find_device_all_last_ts
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ResponseDeviceChannelData'
+                type: array
+          description: Device Channel Data at the last available timestamp (All channels).
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceChannelController
+      x-controller-name: DeviceChannelController
+      x-operation-name: findDeviceAllLastTS
+      x-openapi-router-controller: openapi_server.controllers.device_channel_controller_controller
+  /device-channel/data-last-timestamp/{deviceId}/{channelId}:
+    get:
+      operationId: device_channel_controller_find_device_channel_last_ts
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDeviceChannelData'
+          description: Channel Data of last available timestmp
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceChannelController
+      x-controller-name: DeviceChannelController
+      x-operation-name: findDeviceChannelLastTS
+      x-openapi-router-controller: openapi_server.controllers.device_channel_controller_controller
+  /device-channel/last-timestamp-in-device/{deviceId}:
+    get:
+      operationId: device_channel_controller_find_device_all_last_recorded_ts
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timestamp'
+          description: Last recorded timestamp in device
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceChannelController
+      x-controller-name: DeviceChannelController
+      x-operation-name: findDeviceAllLastRecordedTS
+      x-openapi-router-controller: openapi_server.controllers.device_channel_controller_controller
+  /device-events/assetId/{assetId}/page/{page}/count/{count}:
+    get:
+      operationId: device_event_controller_find
+      parameters:
+      - explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: page
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: count
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DeviceEventWithRelations'
+                type: array
+          description: Array of DeviceEvents in asset
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceEventController
+      x-controller-name: DeviceEventController
+      x-operation-name: find
+      x-openapi-router-controller: openapi_server.controllers.device_event_controller_controller
+  /device-events/by-asset/count-not-viewed/{assetId}:
+    get:
+      operationId: device_event_controller_count_not_viewed
+      parameters:
+      - explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loopback_Count'
+          description: Count of not viewed Device Events in asset
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceEventController
+      x-controller-name: DeviceEventController
+      x-operation-name: countNotViewed
+      x-openapi-router-controller: openapi_server.controllers.device_event_controller_controller
+  /device-events/mark-read/{eventId}:
+    get:
+      operationId: device_event_controller_update_viewed_by
+      parameters:
+      - explode: false
+        in: path
+        name: eventId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: DeviceEvent updated
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceEventController
+      x-controller-name: DeviceEventController
+      x-operation-name: updateViewedBy
+      x-openapi-router-controller: openapi_server.controllers.device_event_controller_controller
+  /device-group-memberships:
+    post:
+      operationId: device_group_membership_controller_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceGroupMembershipExcluding_id_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceGroupMembership'
+          description: DeviceGroupMembership model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceGroupMembershipController
+      x-controller-name: DeviceGroupMembershipController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.device_group_membership_controller_controller
+  /device-group-memberships/by-asset/{assetId}:
+    get:
+      operationId: device_group_membership_controller_find_by_asset_id
+      parameters:
+      - explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DeviceGroupMembership'
+                type: array
+          description: Array of DeviceGroupMembership model instances
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceGroupMembershipController
+      x-controller-name: DeviceGroupMembershipController
+      x-operation-name: findByAssetId
+      x-openapi-router-controller: openapi_server.controllers.device_group_membership_controller_controller
+  /device-group-memberships/by-device/{deviceId}:
+    get:
+      operationId: device_group_membership_controller_find_by_device_id
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DeviceGroupMembership'
+                type: array
+          description: Array of DeviceGroupMembership model instances
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceGroupMembershipController
+      x-controller-name: DeviceGroupMembershipController
+      x-operation-name: findByDeviceId
+      x-openapi-router-controller: openapi_server.controllers.device_group_membership_controller_controller
+  /device-group-memberships/{id}:
+    delete:
+      operationId: device_group_membership_controller_delete_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: DeviceGroupMembership DELETE success
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceGroupMembershipController
+      x-controller-name: DeviceGroupMembershipController
+      x-operation-name: deleteById
+      x-openapi-router-controller: openapi_server.controllers.device_group_membership_controller_controller
+  /device-type:
+    post:
+      operationId: device_type_controller_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceType'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceType'
+          description: DeviceType model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeController
+      x-controller-name: DeviceTypeController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.device_type_controller_controller
+  /device-type-channel-type/channel-type/{channelTypeId}:
+    patch:
+      operationId: device_type_channel_type_controller_update_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: channelTypeId
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelTypeExcluding_id-name-deviceTypeId_'
+        x-parameter-index: 1
+      responses:
+        "204":
+          description: ChannelType PATCH success
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeChannelTypeController
+      x-controller-name: DeviceTypeChannelTypeController
+      x-operation-name: updateById
+      x-openapi-router-controller: openapi_server.controllers.device_type_channel_type_controller_controller
+  /device-type-channel-type/{deviceTypeId}:
+    post:
+      operationId: device_type_channel_type_controller_create
+      parameters:
+      - explode: false
+        in: path
+        name: deviceTypeId
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelTypeExcluding_id-deviceTypeId_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelType'
+          description: ChannelType model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeChannelTypeController
+      x-controller-name: DeviceTypeChannelTypeController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.device_type_channel_type_controller_controller
+  /device-type-channel-type/{deviceTypeId}/channel-categories:
+    get:
+      operationId: device_type_channel_type_controller_device_type_channel_categories
+      parameters:
+      - explode: false
+        in: path
+        name: deviceTypeId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ChannelTypeExcluding_name-description-unit-channelType-deviceTypeId_'
+                type: array
+          description: ChannelType model count
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeChannelTypeController
+      x-controller-name: DeviceTypeChannelTypeController
+      x-operation-name: deviceTypeChannelCategories
+      x-openapi-router-controller: openapi_server.controllers.device_type_channel_type_controller_controller
+  /device-type-channel-type/{deviceTypeId}/count:
+    get:
+      operationId: device_type_channel_type_controller_count
+      parameters:
+      - explode: false
+        in: path
+        name: deviceTypeId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loopback_Count'
+          description: ChannelType model count
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeChannelTypeController
+      x-controller-name: DeviceTypeChannelTypeController
+      x-operation-name: count
+      x-openapi-router-controller: openapi_server.controllers.device_type_channel_type_controller_controller
+  /device-type-channel-type/{deviceTypeId}/page/{page}/count/{count}:
+    get:
+      operationId: device_type_channel_type_controller_find
+      parameters:
+      - explode: false
+        in: path
+        name: deviceTypeId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: page
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: count
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ChannelType'
+                type: array
+          description: Array of ChannelType model instances
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeChannelTypeController
+      x-controller-name: DeviceTypeChannelTypeController
+      x-operation-name: find
+      x-openapi-router-controller: openapi_server.controllers.device_type_channel_type_controller_controller
+  /device-type/count:
+    get:
+      operationId: device_type_controller_count
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loopback_Count'
+          description: DeviceType model count
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeController
+      x-controller-name: DeviceTypeController
+      x-operation-name: count
+      x-openapi-router-controller: openapi_server.controllers.device_type_controller_controller
+  /device-type/device-categories-in-asset/{assetId}:
+    get:
+      operationId: device_type_controller_get_asset_device_categories
+      parameters:
+      - explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DeviceTypeExcluding_model-description-manufacturer_'
+                type: array
+          description: Array of DeviceType model instances
+        "401":
+          description: User is not authorized
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeController
+      x-controller-name: DeviceTypeController
+      x-operation-name: getAssetDeviceCategories
+      x-openapi-router-controller: openapi_server.controllers.device_type_controller_controller
+  /device-type/get-all/page/{page}/count/{count}:
+    get:
+      operationId: device_type_controller_find
+      parameters:
+      - explode: false
+        in: path
+        name: page
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: count
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DeviceType'
+                type: array
+          description: Array of DeviceType model instances
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeController
+      x-controller-name: DeviceTypeController
+      x-operation-name: find
+      x-openapi-router-controller: openapi_server.controllers.device_type_controller_controller
+  /device-type/{id}:
+    patch:
+      operationId: device_type_controller_update_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceTypeExcluding_id-model-manufacturer_'
+        x-parameter-index: 1
+      responses:
+        "204":
+          description: DeviceType PATCH success
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceTypeController
+      x-controller-name: DeviceTypeController
+      x-operation-name: updateById
+      x-openapi-router-controller: openapi_server.controllers.device_type_controller_controller
+  /device/{dataLoggerId}:
+    post:
+      description: Used for creating a new <b>Device</b>, belonging to a <b>DataLogger</b>
+        with id <i>dataLoggerId</i> by an authorized <b>User</b> identified by the
+        provided <i>token</i>.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-dataloggercontroller"
+        target="_blank">DataLoggerController</a>, <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocsdevice"
+        target="_blank">DeviceModel</a></i>
+      operationId: device_controller_create
+      parameters:
+      - explode: false
+        in: path
+        name: dataLoggerId
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceExcluding_id-dataLoggerId_'
+        x-parameter-index: 2
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+          description: Returns created Device model instance
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /device/{deviceId}/channel:
+    post:
+      description: Used for creating a new <b>Channel</b>, belonging to a <b>Device</b>
+        with id <i>deviceId</i> by an authorized <b>User</b> identified by the provided
+        <i>token</i>.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocschannel"
+        target="_blank">ChannelModel</a>, <a href="/documentation.html#tocsdevice"
+        target="_blank">DeviceModel</a></i>
+      operationId: device_controller_create_channel
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelExcluding_id-deviceId_'
+        x-parameter-index: 2
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+          description: Returns created Channel model instance in Device with provided
+            id
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: createChannel
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /device/{deviceId}/channel/{channelId}/disable-monitoring/all/{all}:
+    get:
+      description: Disable monitoring of <b>Channel</b> identified by <i>channelId</i>,
+        in <b>Device</b> identified by <i>deviceId</i>, owned by <b>User</b> authorized
+        by <i>token</i>.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocschannel"
+        target="_blank">ChannelModel</a>, <a href="/documentation.html#tocsdevice"
+        target="_blank">DeviceModel</a></i>
+      operationId: device_controller_disable_channel_monitoring
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: all
+        required: true
+        schema:
+          type: boolean
+        style: simple
+      responses:
+        "204":
+          description: Monitoring disabled
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: disableChannelMonitoring
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /device/{deviceId}/channel/{channelId}/enable-monitoring/all/{all}:
+    get:
+      description: Enable monitoring of <b>Channel</b> identified by <i>channelId</i>,
+        in <b>Device</b> identified by <i>deviceId</i>, owned by <b>User</b> authorized
+        by <i>token</i>.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocschannel"
+        target="_blank">ChannelModel</a>, <a href="/documentation.html#tocsdevice"
+        target="_blank">DeviceModel</a></i>
+      operationId: device_controller_enable_channel_monitoring
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: all
+        required: true
+        schema:
+          type: boolean
+        style: simple
+      responses:
+        "204":
+          description: Monitoring enabled
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: enableChannelMonitoring
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /device/{deviceId}/channelTypes:
+    get:
+      description: Used for getting the  <b>Channel</b><b>Types</b> of <b>Channels</b>
+        belonging to a <b>Device</b> with id <i>deviceId</i>, by an authorized <b>User</b>
+        identified by the provided <i>token</i>.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocschannel"
+        target="_blank">ChannelModel</a>, <a href="/documentation.html#tocschanneltype"
+        target="_blank">ChannelTypeModel</a>, <a href="/documentation.html#tocsdevice"
+        target="_blank">DeviceModel</a></i>
+      operationId: device_controller_find_channel_types
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ChannelType'
+                type: array
+          description: Returns Array of ChannelType model instances in Device with
+            provided id
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: findChannelTypes
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /device/{deviceId}/channels:
+    get:
+      description: Used for getting <b>Channel</b><b>s</b>, belonging to a <b>Device</b>
+        with id <i>deviceId</i>, by an authorized <b>User</b> identified by the provided
+        <i>token</i>.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocschannel"
+        target="_blank">ChannelModel</a>, <a href="/documentation.html#tocsdevice"
+        target="_blank">DeviceModel</a></i>
+      operationId: device_controller_find_channels
+      parameters:
+      - explode: false
+        in: path
+        name: deviceId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Channel'
+                type: array
+          description: Returns Array of Channel model instances in Device with provided
+            id
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: findChannels
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /device/{id}:
+    patch:
+      operationId: device_controller_update_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceExcluding_id-serialNo-dataLoggerId-deviceTypeId_'
+        x-parameter-index: 2
+      responses:
+        "204":
+          description: Device PATCH success
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: updateById
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /devices/with-device-type:
+    post:
+      description: Returns array of devices with their device types
+      operationId: device_controller_get_devices_with_type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/DeviceExcluding_description-serialNo-dataLoggerId-deviceTypeId_'
+              type: array
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DeviceWithType'
+                type: array
+          description: DeviceType belonging to Device
+        "401":
+          description: User is not authorized
+        "404":
+          description: Device Not Found
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: getDevicesWithType
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /devices/{dataLoggerId}:
+    get:
+      description: Used for getting the <b>Devices</b>, belonging to a <b>DataLogger</b>
+        with id <i>dataLoggerId</i> by an authorized <b>User</b> identified by the
+        provided <i>token</i>.<br><br><i><b>References:</b> <a href="/documentation.html#atman-iot-dataloggercontroller"
+        target="_blank">DataLoggerController</a>, <a href="/documentation.html#atman-iot-usercontroller"
+        target="_blank">UserController</a>, <a href="/documentation.html#tocsdevice"
+        target="_blank">DeviceModel</a></i>
+      operationId: device_controller_find
+      parameters:
+      - explode: false
+        in: path
+        name: dataLoggerId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Device'
+                type: array
+          description: Returns Array of Device model in DataLogger with provided id
+        "401":
+          description: User is not authorized
+        "406":
+          description: Request is not acceptable. Check response for help
+      security:
+      - bearerAuth: []
+      tags:
+      - DeviceController
+      x-controller-name: DeviceController
+      x-operation-name: find
+      x-openapi-router-controller: openapi_server.controllers.device_controller_controller
+  /event:
+    post:
+      operationId: event_controller_create_now
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventExcluding_id-resolved-timestamp-resolutionTimestamp_'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: Event model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: create_now
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /event/process:
+    get:
+      operationId: event_controller_process_subscriptions
+      responses:
+        "204":
+          description: Event Processing finished
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: process_subscriptions
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /event/related-device:
+    post:
+      operationId: event_controller_create_related_dev
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRelatedDeviceExcluding_id_'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventRelatedDevice'
+          description: Event Related Device model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: create_related_dev
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /event/resolve/{id}:
+    patch:
+      operationId: event_controller_update_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: Event resolved
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: updateById
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /event/rule:
+    post:
+      operationId: event_controller_create_rule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestEventCreateRule'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventRule'
+          description: Event Rule model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: create_rule
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /event/rule/subscription:
+    post:
+      operationId: event_controller_create_rule_subscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRuleSubscriptionExcluding_id-lastExecTimestamp_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventRuleSubscription'
+          description: Event Rule Subscription model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: create_rule_subscription
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /events/all/{assetId}:
+    get:
+      operationId: event_controller_find
+      parameters:
+      - explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ResponseEventAssetEvents'
+                type: array
+          description: Array of all Asset Events
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: find
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /events/unresolved/{assetId}:
+    get:
+      operationId: event_controller_find_unresolved
+      parameters:
+      - explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ResponseEventAssetEvents'
+                type: array
+          description: Array of unresolved Asset Events
+      security:
+      - bearerAuth: []
+      tags:
+      - EventController
+      x-controller-name: EventController
+      x-operation-name: find_unresolved
+      x-openapi-router-controller: openapi_server.controllers.event_controller_controller
+  /ping:
+    get:
+      description: Ping the server
+      operationId: ping_controller_ping
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: Ping Response
+      tags:
+      - PingController
+      x-controller-name: PingController
+      x-operation-name: ping
+      x-openapi-router-controller: openapi_server.controllers.ping_controller_controller
+  /scheduler/process/events/{attempt}/{serverKey}:
+    get:
+      operationId: scheduler_controller_process_events
+      parameters:
+      - explode: false
+        in: path
+        name: attempt
+        required: true
+        schema:
+          type: number
+        style: simple
+      - explode: false
+        in: path
+        name: serverKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Scheduler Processing finished
+      tags:
+      - SchedulerController
+      x-controller-name: SchedulerController
+      x-operation-name: process_events
+      x-openapi-router-controller: openapi_server.controllers.scheduler_controller_controller
+  /scheduler/process/ftp-rejected/{serverKey}:
+    get:
+      operationId: scheduler_controller_process_ftp_rejected
+      parameters:
+      - explode: false
+        in: path
+        name: serverKey
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Scheduler Processing finished
+      tags:
+      - SchedulerController
+      x-controller-name: SchedulerController
+      x-operation-name: process_ftp_rejected
+      x-openapi-router-controller: openapi_server.controllers.scheduler_controller_controller
+  /user-subscription/get-by-reference-code/{referenceCode}:
+    get:
+      operationId: user_subscription_controller_get_by_refference_code
+      parameters:
+      - explode: false
+        in: path
+        name: referenceCode
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSubscriptionWithRelations'
+          description: UserSubscription model instance
+      tags:
+      - UserSubscriptionController
+      x-controller-name: UserSubscriptionController
+      x-operation-name: getByRefferenceCode
+      x-openapi-router-controller: openapi_server.controllers.user_subscription_controller_controller
+  /user-subscription/get-new/{subscriptionId}:
+    get:
+      operationId: user_subscription_controller_create_user_subscription_by_sub_id
+      parameters:
+      - explode: false
+        in: path
+        name: subscriptionId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSubscription'
+          description: UserSubscription model instance
+      tags:
+      - UserSubscriptionController
+      x-controller-name: UserSubscriptionController
+      x-operation-name: createUserSubscriptionBySubId
+      x-openapi-router-controller: openapi_server.controllers.user_subscription_controller_controller
+  /user-subscription/subscriptions/{product}:
+    get:
+      operationId: user_subscription_controller_find_subscriptions_by_category
+      parameters:
+      - explode: false
+        in: path
+        name: product
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Subscription'
+                type: array
+          description: Available subscriptions for product
+      tags:
+      - UserSubscriptionController
+      x-controller-name: UserSubscriptionController
+      x-operation-name: findSubscriptionsByCategory
+      x-openapi-router-controller: openapi_server.controllers.user_subscription_controller_controller
+  /user-subscriptions/paypal/callback:
+    post:
+      operationId: user_subscription_controller_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "204":
+          description: Success
+      tags:
+      - UserSubscriptionController
+      x-controller-name: UserSubscriptionController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.user_subscription_controller_controller
+  /user-subscriptions/verify-reference-code:
+    post:
+      operationId: user_subscription_controller_verify_code
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeVerificationRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSubscription'
+          description: User Subscription
+        "401":
+          description: Unauthorized
+      tags:
+      - UserSubscriptionController
+      x-controller-name: UserSubscriptionController
+      x-operation-name: verifyCode
+      x-openapi-router-controller: openapi_server.controllers.user_subscription_controller_controller
+  /user/getVirtualUsers:
+    get:
+      description: Returns users under administrator account
+      operationId: user_controller_get_virtual_users
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserExcluding_passwd-email-roles-isVirtual-subscriptionReferenceCode_'
+                type: array
+          description: Array of virtual users
+        "401":
+          description: User is not authorized
+      security:
+      - bearerAuth: []
+      tags:
+      - UserController
+      x-controller-name: UserController
+      x-operation-name: getVirtualUsers
+      x-openapi-router-controller: openapi_server.controllers.user_controller_controller
+  /user/login:
+    post:
+      description: Used for <b>User</b> and <b>Virtual User</b> login. Exchanges <i>username/password</i>
+        with an authorization <i>token</i>. Please enter the email provided durring
+        registration in the username field.<br><br><i><b>References:</b> <a href="/documentation.html#tocsuser"
+        target="_blank">UserModel</a></i>
+      operationId: user_controller_login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserExcluding_id-email-isVirtual-roles-subscriptionReferenceCode_'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: Login User - Get Access Token
+        "401":
+          description: User is not authorized
+      tags:
+      - UserController
+      x-controller-name: UserController
+      x-operation-name: login
+      x-openapi-router-controller: openapi_server.controllers.user_controller_controller
+  /user/register/virtual:
+    post:
+      description: Used for registering a new <b>Virtual User</b> by a <b>User</b>,
+        identified by the provided <i>token.</i><br><br><i><b>References:</b> <a href="/documentation.html#tocsuser"
+        target="_blank">UserModel</a></i>
+      operationId: user_controller_create_virtual
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserExcluding_id-username-isVirtual-roles-subscriptionReferenceCode_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User model instance
+        "406":
+          description: Cannot register virtual user
+        "422":
+          description: User already exists
+      security:
+      - bearerAuth: []
+      tags:
+      - UserController
+      x-controller-name: UserController
+      x-operation-name: createVirtual
+      x-openapi-router-controller: openapi_server.controllers.user_controller_controller
+  /user/register/{referenceCode}:
+    post:
+      description: Used for registering a new <b>User</b>.<br><br><i><b>References:</b>
+        <a href="/documentation.html#tocsuser" target="_blank">UserModel</a></i>
+      operationId: user_controller_create
+      parameters:
+      - explode: false
+        in: path
+        name: referenceCode
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserExcluding_id-username-isVirtual-roles-subscriptionReferenceCode_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User model instance
+        "422":
+          description: User already exists
+      tags:
+      - UserController
+      x-controller-name: UserController
+      x-operation-name: create
+      x-openapi-router-controller: openapi_server.controllers.user_controller_controller
+  /users/virtualUser/{id}:
+    delete:
+      description: Deletes Virtual User by Id
+      operationId: user_controller_delete_virtual_user_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: User DELETE success
+        "401":
+          description: User is not authorized
+      security:
+      - bearerAuth: []
+      tags:
+      - UserController
+      x-controller-name: UserController
+      x-operation-name: deleteVirtualUserById
+      x-openapi-router-controller: openapi_server.controllers.user_controller_controller
+  /virtual-access/by-asset:
+    post:
+      operationId: virtual_access_controller_create_access_by_right
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestVirtualAccessRightExcluding_assetGroupId_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualAccess'
+          description: VirtualAccess model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - VirtualAccessController
+      x-controller-name: VirtualAccessController
+      x-operation-name: createAccessByRight
+      x-openapi-router-controller: openapi_server.controllers.virtual_access_controller_controller
+  /virtual-access/by-asset-group:
+    post:
+      operationId: virtual_access_controller_create_access_by_group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestVirtualAccessRightExcluding_assetId_'
+        x-parameter-index: 1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/VirtualAccess'
+                type: array
+          description: VirtualAccess model instance
+      security:
+      - bearerAuth: []
+      tags:
+      - VirtualAccessController
+      x-controller-name: VirtualAccessController
+      x-operation-name: createAccessByGroup
+      x-openapi-router-controller: openapi_server.controllers.virtual_access_controller_controller
+  /virtual-access/by-userId/{userId}:
+    get:
+      operationId: virtual_access_controller_find_by_user_id
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/VirtualAccess'
+                type: array
+          description: Array of VirtualAccess model instances
+      security:
+      - bearerAuth: []
+      tags:
+      - VirtualAccessController
+      x-controller-name: VirtualAccessController
+      x-operation-name: findByUserId
+      x-openapi-router-controller: openapi_server.controllers.virtual_access_controller_controller
+  /virtual-access/{id}:
+    delete:
+      operationId: virtual_access_controller_delete_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: number
+        style: simple
+      responses:
+        "204":
+          description: VirtualAccess DELETE success
+      security:
+      - bearerAuth: []
+      tags:
+      - VirtualAccessController
+      x-controller-name: VirtualAccessController
+      x-operation-name: deleteById
+      x-openapi-router-controller: openapi_server.controllers.virtual_access_controller_controller
+components:
+  schemas:
+    AssetGroup:
+      additionalProperties: false
+      example:
+        name: name
+        description: description
+        id: 0.8008281904610115
+        userId: 6.027456183070403
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        name:
+          description: AssetGroup name
+          type: string
+        description:
+          description: AssetGroup description
+          type: string
+        userId:
+          description: ID of User that AssetGroup belongs to
+          type: number
+      required:
+      - userId
+      title: AssetGroup
+      type: object
+    AssetGroupExcluding_id-userId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''userId'' ] })'
+      properties:
+        name:
+          description: AssetGroup name
+          type: string
+        description:
+          description: AssetGroup description
+          type: string
+      title: AssetGroupExcluding_id-userId_
+      type: object
+    Asset:
+      additionalProperties: false
+      example:
+        name: name
+        description: description
+        id: 0.8008281904610115
+        assetGroupId: 6.027456183070403
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        name:
+          description: Asset name
+          type: string
+        description:
+          description: Asset description
+          type: string
+        assetGroupId:
+          description: ID of AssetGroup that Asset belongs to
+          type: number
+      required:
+      - assetGroupId
+      title: Asset
+      type: object
+    AssetExcluding_id_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'' ] })'
+      properties:
+        name:
+          description: Asset name
+          type: string
+        description:
+          description: Asset description
+          type: string
+        assetGroupId:
+          description: ID of AssetGroup that Asset belongs to
+          type: number
+      required:
+      - assetGroupId
+      title: AssetExcluding_id_
+      type: object
+    AssetExcluding_id-assetGroupId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''assetGroupId'' ] })'
+      properties:
+        name:
+          description: Asset name
+          type: string
+        description:
+          description: Asset description
+          type: string
+      title: AssetExcluding_id-assetGroupId_
+      type: object
+    DashboardElement:
+      additionalProperties: false
+      example:
+        timeWindow: 5.637376656633329
+        channelCategory: channelCategory
+        groupBy: groupBy
+        title: title
+        userId: 1.4658129805029452
+        yLabel: yLabel
+        deviceCategory: deviceCategory
+        assetId: 6.027456183070403
+        location: location
+        id: 0.8008281904610115
+        position: 5.962133916683182
+        elementType: elementType
+        operation: operation
+        xLabel: xLabel
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        assetId:
+          description: ID of Asset that Dashboard Element belongs to
+          type: number
+        userId:
+          description: ID of User that Dashboard Element belongs to
+          type: number
+        deviceCategory:
+          description: Device Category
+          type: string
+        channelCategory:
+          description: Channel Category
+          type: string
+        elementType:
+          description: Element Type
+          type: string
+        position:
+          description: Element Position
+          type: number
+        location:
+          description: 'Element Location: mainDashboard / assetDashboard'
+          type: string
+        timeWindow:
+          description: Time Window
+          type: number
+        operation:
+          description: Data Operation
+          type: string
+        groupBy:
+          description: Data group by
+          type: string
+        title:
+          description: Element Title
+          type: string
+        xLabel:
+          description: Element X Label
+          type: string
+        yLabel:
+          description: Element Y Label
+          type: string
+      required:
+      - assetId
+      - channelCategory
+      - deviceCategory
+      - elementType
+      - groupBy
+      - location
+      - operation
+      - position
+      - timeWindow
+      - userId
+      title: DashboardElement
+      type: object
+    NewDashboardElement:
+      additionalProperties: false
+      description: '(Schema options: { title: ''NewDashboardElement'', exclude: [
+        ''id'', ''position'' ] })'
+      example:
+        timeWindow: 1.4658129805029452
+        deviceCategory: deviceCategory
+        assetId: 0.8008281904610115
+        channelCategory: channelCategory
+        location: location
+        groupBy: groupBy
+        title: title
+        userId: 6.027456183070403
+        elementType: elementType
+        operation: operation
+        yLabel: yLabel
+        xLabel: xLabel
+      properties:
+        assetId:
+          description: ID of Asset that Dashboard Element belongs to
+          type: number
+        userId:
+          description: ID of User that Dashboard Element belongs to
+          type: number
+        deviceCategory:
+          description: Device Category
+          type: string
+        channelCategory:
+          description: Channel Category
+          type: string
+        elementType:
+          description: Element Type
+          type: string
+        location:
+          description: 'Element Location: mainDashboard / assetDashboard'
+          type: string
+        timeWindow:
+          description: Time Window
+          type: number
+        operation:
+          description: Data Operation
+          type: string
+        groupBy:
+          description: Data group by
+          type: string
+        title:
+          description: Element Title
+          type: string
+        xLabel:
+          description: Element X Label
+          type: string
+        yLabel:
+          description: Element Y Label
+          type: string
+      required:
+      - assetId
+      - channelCategory
+      - deviceCategory
+      - elementType
+      - groupBy
+      - location
+      - operation
+      - timeWindow
+      - userId
+      title: NewDashboardElement
+      type: object
+    DashboardElementWithScope:
+      additionalProperties: false
+      example:
+        scope:
+        - '{}'
+        - '{}'
+        dashboardElement:
+          timeWindow: 5.637376656633329
+          channelCategory: channelCategory
+          groupBy: groupBy
+          title: title
+          userId: 1.4658129805029452
+          yLabel: yLabel
+          deviceCategory: deviceCategory
+          assetId: 6.027456183070403
+          location: location
+          id: 0.8008281904610115
+          position: 5.962133916683182
+          elementType: elementType
+          operation: operation
+          xLabel: xLabel
+      properties:
+        dashboardElement:
+          $ref: '#/components/schemas/DashboardElement'
+        scope:
+          items:
+            type: object
+          type: array
+      required:
+      - dashboardElement
+      - scope
+      title: DashboardElementWithScope
+      type: object
+    DataLogger:
+      additionalProperties: false
+      example:
+        dataCompressed: true
+        autoInit: true
+        passwd: passwd
+        authToken: authToken
+        description: description
+        id: 0.8008281904610115
+        connectionType: connectionType
+        config: config
+        userId: 6.027456183070403
+        fileFormat: fileFormat
+        username: username
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        description:
+          description: Datalogger description
+          type: string
+        connectionType:
+          description: Method used by DataLogger to send data to the system. At present
+            only FTP implemented
+          type: string
+        fileFormat:
+          description: Format of the files uploaded to the system DataLogger. At present
+            system supports CSV and XML formats
+          type: string
+        username:
+          description: Username of system FTP account, where the DataLogger sends
+            the data (if applicable)
+          type: string
+        passwd:
+          description: Password of system FTP account, where the DataLogger sends
+            the data (if applicable)
+          type: string
+        authToken:
+          description: Authentication token of DataLogger
+          type: string
+        config:
+          description: JSON configuration file for DataLogger
+          type: string
+        autoInit:
+          description: Flag for selecting if DataLogger is to be initiated automatically
+            from preexisting configuration
+          type: boolean
+        dataCompressed:
+          description: Flag for selecting if DataLogger sends compressed files
+          type: boolean
+        userId:
+          description: ID of User that DataLogger belongs to
+          type: number
+      required:
+      - autoInit
+      - connectionType
+      - dataCompressed
+      - fileFormat
+      - userId
+      title: DataLogger
+      type: object
+    DataLoggerExcluding_id-authToken-config-userId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''authToken'', ''config'',
+        ''userId'' ] })'
+      properties:
+        description:
+          description: Datalogger description
+          type: string
+        connectionType:
+          description: Method used by DataLogger to send data to the system. At present
+            only FTP implemented
+          type: string
+        fileFormat:
+          description: Format of the files uploaded to the system DataLogger. At present
+            system supports CSV and XML formats
+          type: string
+        username:
+          description: Username of system FTP account, where the DataLogger sends
+            the data (if applicable)
+          type: string
+        passwd:
+          description: Password of system FTP account, where the DataLogger sends
+            the data (if applicable)
+          type: string
+        autoInit:
+          description: Flag for selecting if DataLogger is to be initiated automatically
+            from preexisting configuration
+          type: boolean
+        dataCompressed:
+          description: Flag for selecting if DataLogger sends compressed files
+          type: boolean
+      required:
+      - autoInit
+      - connectionType
+      - dataCompressed
+      - fileFormat
+      title: DataLoggerExcluding_id-authToken-config-userId_
+      type: object
+    ChannelTypeExtended:
+      additionalProperties: false
+      example:
+        unit: unit
+        deviceTypeId: 1.4658129805029452
+        name: name
+        description: description
+        channelType: channelType
+        id: 6.027456183070403
+        category: category
+        error: true
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        name:
+          description: ChannelType name
+          type: string
+        category:
+          description: ChannelType category
+          type: string
+        description:
+          description: ChannelType description
+          type: string
+        unit:
+          description: Unit of measurement
+          type: string
+        channelType:
+          description: 'Type of data: UNDEFINED / SPOT_VALUE / COUNTER / TEXT'
+          type: string
+        deviceTypeId:
+          description: ID of DeviceType that ChannelType belongs to
+          type: number
+        error:
+          description: Error status of channel type
+          type: boolean
+      required:
+      - channelType
+      - deviceTypeId
+      - error
+      - name
+      title: ChannelTypeExtended
+      type: object
+    DeviceTypeExtended:
+      additionalProperties: false
+      example:
+        channelTypes:
+        - unit: unit
+          deviceTypeId: 1.4658129805029452
+          name: name
+          description: description
+          channelType: channelType
+          id: 6.027456183070403
+          category: category
+          error: true
+        - unit: unit
+          deviceTypeId: 1.4658129805029452
+          name: name
+          description: description
+          channelType: channelType
+          id: 6.027456183070403
+          category: category
+          error: true
+        description: description
+        model: model
+        id: 0.8008281904610115
+        category: category
+        error: true
+        manufacturer: manufacturer
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        model:
+          description: DeviceType model
+          type: string
+        description:
+          description: DeviceType description
+          type: string
+        manufacturer:
+          description: DeviceType manufacturer
+          type: string
+        category:
+          description: DeviceType category
+          type: string
+        error:
+          description: Error status of device type
+          type: boolean
+        channelTypes:
+          items:
+            $ref: '#/components/schemas/ChannelTypeExtended'
+          type: array
+      required:
+      - channelTypes
+      - error
+      - manufacturer
+      - model
+      title: DeviceTypeExtended
+      type: object
+    Device:
+      additionalProperties: false
+      example:
+        deviceTypeId: 2.3021358869347655
+        description: description
+        dataLoggerId: 5.637376656633329
+        id: 5.962133916683182
+        serialNo: serialNo
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        description:
+          description: Device description
+          type: string
+        serialNo:
+          description: Device serial number
+          type: string
+        dataLoggerId:
+          description: ID of DataLogger that Device belongs to
+          type: number
+        deviceTypeId:
+          type: number
+      required:
+      - dataLoggerId
+      - serialNo
+      title: Device
+      type: object
+    Timestamp:
+      additionalProperties: false
+      example:
+        timezone: timezone
+        format: format
+        value: 2000-01-23T04:56:07.000+00:00
+      properties:
+        value:
+          description: Timestamp (same as timestamp property)
+          format: date-time
+          type: string
+        format:
+          description: Timestamp format
+          type: string
+        timezone:
+          description: Timestamp time zone
+          type: string
+      title: Timestamp
+      type: object
+    MeasurementSample:
+      additionalProperties: false
+      example:
+        period: 7.061401241503109
+        scope: scope
+        value: '{}'
+        timestamp:
+          timezone: timezone
+          format: format
+          value: 2000-01-23T04:56:07.000+00:00
+      properties:
+        value:
+          description: 'measurement: string / number'
+          type: object
+        period:
+          type: number
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        scope:
+          description: Scope
+          type: string
+      required:
+      - period
+      - scope
+      - timestamp
+      - value
+      title: MeasurementSample
+      type: object
+    ResponseDataLoggerSetupStep2:
+      additionalProperties: false
+      example:
+        deviceTypes:
+        - channelTypes:
+          - unit: unit
+            deviceTypeId: 1.4658129805029452
+            name: name
+            description: description
+            channelType: channelType
+            id: 6.027456183070403
+            category: category
+            error: true
+          - unit: unit
+            deviceTypeId: 1.4658129805029452
+            name: name
+            description: description
+            channelType: channelType
+            id: 6.027456183070403
+            category: category
+            error: true
+          description: description
+          model: model
+          id: 0.8008281904610115
+          category: category
+          error: true
+          manufacturer: manufacturer
+        - channelTypes:
+          - unit: unit
+            deviceTypeId: 1.4658129805029452
+            name: name
+            description: description
+            channelType: channelType
+            id: 6.027456183070403
+            category: category
+            error: true
+          - unit: unit
+            deviceTypeId: 1.4658129805029452
+            name: name
+            description: description
+            channelType: channelType
+            id: 6.027456183070403
+            category: category
+            error: true
+          description: description
+          model: model
+          id: 0.8008281904610115
+          category: category
+          error: true
+          manufacturer: manufacturer
+        devices:
+        - deviceTypeId: 2.3021358869347655
+          description: description
+          dataLoggerId: 5.637376656633329
+          id: 5.962133916683182
+          serialNo: serialNo
+        - deviceTypeId: 2.3021358869347655
+          description: description
+          dataLoggerId: 5.637376656633329
+          id: 5.962133916683182
+          serialNo: serialNo
+        sample:
+          period: 7.061401241503109
+          scope: scope
+          value: '{}'
+          timestamp:
+            timezone: timezone
+            format: format
+            value: 2000-01-23T04:56:07.000+00:00
+        errorCount: 9.301444243932576
+        errors:
+        - errors
+        - errors
+      properties:
+        deviceTypes:
+          items:
+            $ref: '#/components/schemas/DeviceTypeExtended'
+          type: array
+        devices:
+          items:
+            $ref: '#/components/schemas/Device'
+          type: array
+        sample:
+          $ref: '#/components/schemas/MeasurementSample'
+        errorCount:
+          description: Sample Value
+          type: number
+        errors:
+          items:
+            description: Error description
+            type: string
+          type: array
+      required:
+      - deviceTypes
+      - devices
+      - errorCount
+      title: ResponseDataLoggerSetupStep2
+      type: object
+    RequestDataLoggerSetupXml2SearchStringStructureSplit:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        delimiter:
+          description: Delimiter used to split the string in the provided XML Key
+          type: string
+        location:
+          description: Location of the required value in string split using delimmiter
+          type: number
+      required:
+      - delimiter
+      - location
+      title: RequestDataLoggerSetupXml2SearchStringStructureSplitExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupXml2SearchStringStructure:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        key:
+          description: XML key containing parent attribute
+          type: string
+        isString:
+          description: Flag for selecting if parent value is the entire string contained
+            in the provided XML Key.  If set to true performSplit must be defined
+          type: boolean
+        performSplit:
+          items:
+            $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructureSplit'
+          type: array
+      required:
+      - isString
+      - key
+      - performSplit
+      title: RequestDataLoggerSetupXml2SearchStringStructureExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupXml2Excluding_fileFormat_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        objectListKey:
+          description: XML key of list containing the the measurements
+          type: string
+        model:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        serialNo:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        channelName:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        channelUnit:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        value:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        period:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        timestamp:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        confirm:
+          description: Provided Configuration Confirmation. Set to true to save current
+            configuration
+          type: boolean
+      required:
+      - channelName
+      - channelUnit
+      - confirm
+      - model
+      - objectListKey
+      - period
+      - serialNo
+      - timestamp
+      - value
+      title: RequestDataLoggerSetupXml2Excluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupXml2:
+      additionalProperties: false
+      properties:
+        objectListKey:
+          description: XML key of list containing the the measurements
+          type: string
+        model:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        serialNo:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        channelName:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        channelUnit:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        value:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        period:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        timestamp:
+          $ref: '#/components/schemas/RequestDataLoggerSetupXml2SearchStringStructure'
+        confirm:
+          description: Provided Configuration Confirmation. Set to true to save current
+            configuration
+          type: boolean
+        fileFormat:
+          description: Data File Format
+          type: string
+      required:
+      - channelName
+      - channelUnit
+      - confirm
+      - fileFormat
+      - model
+      - objectListKey
+      - period
+      - serialNo
+      - timestamp
+      - value
+      title: RequestDataLoggerSetupXml2
+      type: object
+    RequestDataLoggerSetupCsv2LocationSpec:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        row:
+          description: Row containing parent info
+          type: number
+        column:
+          description: Row containing parent info
+          type: number
+        setManually:
+          description: Flag to enable setting parent manually
+          type: boolean
+        manualValue:
+          description: Manual value for parent
+          type: string
+      required:
+      - column
+      - manualValue
+      - row
+      - setManually
+      title: RequestDataLoggerSetupCsv2LocationSpecExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2TimeData:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        column:
+          description: Column containing time data
+          type: number
+        firstItemRow:
+          description: Row containing first value of time data in the CSV file
+          type: number
+        nextItemIteration:
+          description: Relevant row location of next item
+          type: number
+        timezone:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2LocationSpec'
+        format:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2LocationSpec'
+      required:
+      - column
+      - firstItemRow
+      - format
+      - nextItemIteration
+      - timezone
+      title: RequestDataLoggerSetupCsv2TimeDataExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Array:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        firstItemRow:
+          description: First row containing parent
+          type: number
+        setManually:
+          description: Flag to enable setting parent manually
+          type: boolean
+        manualValue:
+          description: Manual value for parent (string)
+          type: string
+      required:
+      - firstItemRow
+      title: RequestDataLoggerSetupCsv2DataHeaderLocationKeys_ArrayExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Str_Array:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        firstItemRow:
+          description: First row containing parent
+          type: number
+        setManually:
+          description: Flag to enable setting parent manually
+          type: boolean
+        manualValue:
+          items:
+            description: Manual value for parent ([string])
+            type: string
+          type: array
+      required:
+      - firstItemRow
+      title: RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Str_ArrayExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Number:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        firstItemRow:
+          description: First row containing parent
+          type: number
+        setManually:
+          description: Flag to enable setting parent manually
+          type: boolean
+        manualValue:
+          description: Manual value for parent (number)
+          type: number
+      required:
+      - firstItemRow
+      title: RequestDataLoggerSetupCsv2DataHeaderLocationKeys_NumberExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2DataHeaderLocation:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        firstItemCol:
+          description: First column of header
+          type: number
+        nextItemIteration:
+          description: Relevant row location of next item
+          type: number
+        model:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Array'
+        serialNo:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Array'
+        channelName:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Str_Array'
+        channelUnit:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Str_Array'
+        period:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2DataHeaderLocationKeys_Number'
+      required:
+      - channelName
+      - channelUnit
+      - firstItemCol
+      - model
+      - nextItemIteration
+      - period
+      - serialNo
+      title: RequestDataLoggerSetupCsv2DataHeaderLocationExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2DataValueLocation:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        firstItemRow:
+          description: First row containing a measurement
+          type: number
+        nextItemIteration:
+          description: Relevant row location of next item
+          type: number
+      required:
+      - firstItemRow
+      - nextItemIteration
+      title: RequestDataLoggerSetupCsv2DataValueLocationExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2Data:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        header:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2DataHeaderLocation'
+        value:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2DataValueLocation'
+      required:
+      - header
+      - value
+      title: RequestDataLoggerSetupCsv2DataExcluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2Excluding_fileFormat_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''fileFormat'' ] })'
+      properties:
+        delimiter:
+          description: Delimiter used in CSV file
+          type: string
+        decimalPoint:
+          description: Decimal Point of values in CSV file
+          type: string
+        timeData:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2TimeData'
+        data:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2Data'
+        confirm:
+          description: Provided Configuration Confirmation. Set to true to save current
+            configuration
+          type: boolean
+      required:
+      - confirm
+      - data
+      - decimalPoint
+      - delimiter
+      - timeData
+      title: RequestDataLoggerSetupCsv2Excluding_fileFormat_
+      type: object
+    RequestDataLoggerSetupCsv2:
+      additionalProperties: false
+      properties:
+        delimiter:
+          description: Delimiter used in CSV file
+          type: string
+        decimalPoint:
+          description: Decimal Point of values in CSV file
+          type: string
+        timeData:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2TimeData'
+        data:
+          $ref: '#/components/schemas/RequestDataLoggerSetupCsv2Data'
+        confirm:
+          description: Provided Configuration Confirmation. Set to true to save current
+            configuration
+          type: boolean
+        fileFormat:
+          description: Data File Format
+          type: string
+      required:
+      - confirm
+      - data
+      - decimalPoint
+      - delimiter
+      - fileFormat
+      - timeData
+      title: RequestDataLoggerSetupCsv2
+      type: object
+    ChannelType:
+      additionalProperties: false
+      example:
+        unit: unit
+        deviceTypeId: 6.027456183070403
+        name: name
+        description: description
+        channelType: channelType
+        id: 0.8008281904610115
+        category: category
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        name:
+          description: ChannelType name
+          type: string
+        category:
+          description: ChannelType category
+          type: string
+        description:
+          description: ChannelType description
+          type: string
+        unit:
+          description: Unit of measurement
+          type: string
+        channelType:
+          description: 'Type of data: UNDEFINED / SPOT_VALUE / COUNTER / TEXT'
+          type: string
+        deviceTypeId:
+          description: ID of DeviceType that ChannelType belongs to
+          type: number
+      required:
+      - channelType
+      - deviceTypeId
+      - name
+      title: ChannelType
+      type: object
+    DataFloat:
+      additionalProperties: false
+      example:
+        period: 5.962133916683182
+        id: 1.4658129805029452
+        measurement: 5.637376656633329
+        channelId: 2.3021358869347655
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        period:
+          description: Recording period - seconds
+          type: number
+        measurement:
+          description: Recorded measurement
+          type: number
+        timestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        channelId:
+          description: ID of Channel that DataFloat belongs to
+          type: number
+      required:
+      - channelId
+      - measurement
+      - period
+      - timestamp
+      title: DataFloat
+      type: object
+    DataText:
+      additionalProperties: false
+      example:
+        period: 9.301444243932576
+        id: 7.061401241503109
+        measurement: measurement
+        channelId: 3.616076749251911
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        period:
+          description: Recording period - seconds
+          type: number
+        measurement:
+          description: Recorded data
+          type: string
+        timestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        channelId:
+          description: ID of Channel that DataFloat belongs to
+          type: number
+      required:
+      - channelId
+      - measurement
+      - period
+      - timestamp
+      title: DataText
+      type: object
+    ResponseDeviceChannelData:
+      additionalProperties: false
+      example:
+        dataFloat:
+        - period: 5.962133916683182
+          id: 1.4658129805029452
+          measurement: 5.637376656633329
+          channelId: 2.3021358869347655
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - period: 5.962133916683182
+          id: 1.4658129805029452
+          measurement: 5.637376656633329
+          channelId: 2.3021358869347655
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        dataText:
+        - period: 9.301444243932576
+          id: 7.061401241503109
+          measurement: measurement
+          channelId: 3.616076749251911
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - period: 9.301444243932576
+          id: 7.061401241503109
+          measurement: measurement
+          channelId: 3.616076749251911
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        channelType:
+          unit: unit
+          deviceTypeId: 6.027456183070403
+          name: name
+          description: description
+          channelType: channelType
+          id: 0.8008281904610115
+          category: category
+      properties:
+        channelType:
+          $ref: '#/components/schemas/ChannelType'
+        dataFloat:
+          items:
+            $ref: '#/components/schemas/DataFloat'
+          type: array
+        dataText:
+          items:
+            $ref: '#/components/schemas/DataText'
+          type: array
+      required:
+      - channelType
+      title: ResponseDeviceChannelData
+      type: object
+    UserCredentialsWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        passwd: passwd
+        id: 4.145608029883936
+        userId: 7.386281948385884
+      properties:
+        id:
+          type: number
+        passwd:
+          type: string
+        userId:
+          type: number
+      required:
+      - passwd
+      - userId
+      title: UserCredentialsWithRelations
+      type: object
+    UserWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        passwd: passwd
+        roles:
+        - roles
+        - roles
+        userCredentials:
+          passwd: passwd
+          id: 4.145608029883936
+          userId: 7.386281948385884
+        id: 2.027123023002322
+        isVirtual: true
+        subscriptionReferenceCode: subscriptionReferenceCode
+        email: email
+        username: username
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        username:
+          description: Username
+          type: string
+        passwd:
+          description: Password
+          type: string
+        email:
+          description: Email
+          type: string
+        roles:
+          items:
+            type: string
+          type: array
+        isVirtual:
+          description: Automatically assigned flag to select if User is virtual or
+            not
+          type: boolean
+        subscriptionReferenceCode:
+          type: string
+        userCredentials:
+          $ref: '#/components/schemas/UserCredentialsWithRelations'
+      required:
+      - email
+      - isVirtual
+      - username
+      title: UserWithRelations
+      type: object
+    DataLoggerWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        dataCompressed: true
+        autoInit: true
+        passwd: passwd
+        authToken: authToken
+        description: description
+        id: 9.301444243932576
+        connectionType: connectionType
+        config: config
+        userId: 3.616076749251911
+        user:
+          passwd: passwd
+          roles:
+          - roles
+          - roles
+          userCredentials:
+            passwd: passwd
+            id: 4.145608029883936
+            userId: 7.386281948385884
+          id: 2.027123023002322
+          isVirtual: true
+          subscriptionReferenceCode: subscriptionReferenceCode
+          email: email
+          username: username
+        fileFormat: fileFormat
+        username: username
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        description:
+          description: Datalogger description
+          type: string
+        connectionType:
+          description: Method used by DataLogger to send data to the system. At present
+            only FTP implemented
+          type: string
+        fileFormat:
+          description: Format of the files uploaded to the system DataLogger. At present
+            system supports CSV and XML formats
+          type: string
+        username:
+          description: Username of system FTP account, where the DataLogger sends
+            the data (if applicable)
+          type: string
+        passwd:
+          description: Password of system FTP account, where the DataLogger sends
+            the data (if applicable)
+          type: string
+        authToken:
+          description: Authentication token of DataLogger
+          type: string
+        config:
+          description: JSON configuration file for DataLogger
+          type: string
+        autoInit:
+          description: Flag for selecting if DataLogger is to be initiated automatically
+            from preexisting configuration
+          type: boolean
+        dataCompressed:
+          description: Flag for selecting if DataLogger sends compressed files
+          type: boolean
+        userId:
+          description: ID of User that DataLogger belongs to
+          type: number
+        user:
+          $ref: '#/components/schemas/UserWithRelations'
+      required:
+      - autoInit
+      - connectionType
+      - dataCompressed
+      - fileFormat
+      - userId
+      title: DataLoggerWithRelations
+      type: object
+    ChannelTypeWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        unit: unit
+        deviceTypeId: 1.4894159098541704
+        name: name
+        description: description
+        channelType: channelType
+        id: 1.0246457001441578
+        category: category
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        name:
+          description: ChannelType name
+          type: string
+        category:
+          description: ChannelType category
+          type: string
+        description:
+          description: ChannelType description
+          type: string
+        unit:
+          description: Unit of measurement
+          type: string
+        channelType:
+          description: 'Type of data: UNDEFINED / SPOT_VALUE / COUNTER / TEXT'
+          type: string
+        deviceTypeId:
+          description: ID of DeviceType that ChannelType belongs to
+          type: number
+        deviceType:
+          $ref: '#/components/schemas/DeviceTypeWithRelations'
+      required:
+      - channelType
+      - deviceTypeId
+      - name
+      title: ChannelTypeWithRelations
+      type: object
+    DeviceTypeWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        channelTypes:
+        - unit: unit
+          deviceTypeId: 1.4894159098541704
+          name: name
+          description: description
+          channelType: channelType
+          id: 1.0246457001441578
+          category: category
+        - unit: unit
+          deviceTypeId: 1.4894159098541704
+          name: name
+          description: description
+          channelType: channelType
+          id: 1.0246457001441578
+          category: category
+        description: description
+        model: model
+        id: 1.2315135367772556
+        category: category
+        manufacturer: manufacturer
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        model:
+          description: DeviceType model
+          type: string
+        description:
+          description: DeviceType description
+          type: string
+        manufacturer:
+          description: DeviceType manufacturer
+          type: string
+        category:
+          description: DeviceType category
+          type: string
+        channelTypes:
+          items:
+            $ref: '#/components/schemas/ChannelTypeWithRelations'
+          type: array
+      required:
+      - manufacturer
+      - model
+      title: DeviceTypeWithRelations
+      type: object
+    DeviceWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        deviceType:
+          channelTypes:
+          - unit: unit
+            deviceTypeId: 1.4894159098541704
+            name: name
+            description: description
+            channelType: channelType
+            id: 1.0246457001441578
+            category: category
+          - unit: unit
+            deviceTypeId: 1.4894159098541704
+            name: name
+            description: description
+            channelType: channelType
+            id: 1.0246457001441578
+            category: category
+          description: description
+          model: model
+          id: 1.2315135367772556
+          category: category
+          manufacturer: manufacturer
+        deviceTypeId: 7.061401241503109
+        dataLogger:
+          dataCompressed: true
+          autoInit: true
+          passwd: passwd
+          authToken: authToken
+          description: description
+          id: 9.301444243932576
+          connectionType: connectionType
+          config: config
+          userId: 3.616076749251911
+          user:
+            passwd: passwd
+            roles:
+            - roles
+            - roles
+            userCredentials:
+              passwd: passwd
+              id: 4.145608029883936
+              userId: 7.386281948385884
+            id: 2.027123023002322
+            isVirtual: true
+            subscriptionReferenceCode: subscriptionReferenceCode
+            email: email
+            username: username
+          fileFormat: fileFormat
+          username: username
+        description: description
+        dataLoggerId: 2.3021358869347655
+        id: 5.637376656633329
+        serialNo: serialNo
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        description:
+          description: Device description
+          type: string
+        serialNo:
+          description: Device serial number
+          type: string
+        dataLoggerId:
+          description: ID of DataLogger that Device belongs to
+          type: number
+        deviceTypeId:
+          type: number
+        dataLogger:
+          $ref: '#/components/schemas/DataLoggerWithRelations'
+        deviceType:
+          $ref: '#/components/schemas/DeviceTypeWithRelations'
+      required:
+      - dataLoggerId
+      - serialNo
+      title: DeviceWithRelations
+      type: object
+    ChannelWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        lastTimestamp: 2000-01-23T04:56:07.000+00:00
+        channelTypeId: 1.1730742509559433
+        monitor: true
+        channelType:
+          unit: unit
+          deviceTypeId: 1.4894159098541704
+          name: name
+          description: description
+          channelType: channelType
+          id: 1.0246457001441578
+          category: category
+        id: 6.84685269835264
+        deviceId: 7.457744773683766
+        device:
+          deviceType:
+            channelTypes:
+            - unit: unit
+              deviceTypeId: 1.4894159098541704
+              name: name
+              description: description
+              channelType: channelType
+              id: 1.0246457001441578
+              category: category
+            - unit: unit
+              deviceTypeId: 1.4894159098541704
+              name: name
+              description: description
+              channelType: channelType
+              id: 1.0246457001441578
+              category: category
+            description: description
+            model: model
+            id: 1.2315135367772556
+            category: category
+            manufacturer: manufacturer
+          deviceTypeId: 7.061401241503109
+          dataLogger:
+            dataCompressed: true
+            autoInit: true
+            passwd: passwd
+            authToken: authToken
+            description: description
+            id: 9.301444243932576
+            connectionType: connectionType
+            config: config
+            userId: 3.616076749251911
+            user:
+              passwd: passwd
+              roles:
+              - roles
+              - roles
+              userCredentials:
+                passwd: passwd
+                id: 4.145608029883936
+                userId: 7.386281948385884
+              id: 2.027123023002322
+              isVirtual: true
+              subscriptionReferenceCode: subscriptionReferenceCode
+              email: email
+              username: username
+            fileFormat: fileFormat
+            username: username
+          description: description
+          dataLoggerId: 2.3021358869347655
+          id: 5.637376656633329
+          serialNo: serialNo
+        status: status
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        monitor:
+          description: Enable channel monitoring - data recording - by setting to
+            true
+          type: boolean
+        lastTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        status:
+          description: Channel Status
+          type: string
+        deviceId:
+          description: ID of Device that Channel belongs to
+          type: number
+        channelTypeId:
+          description: ID of ChannelType associated with Channel
+          type: number
+        device:
+          $ref: '#/components/schemas/DeviceWithRelations'
+        channelType:
+          $ref: '#/components/schemas/ChannelTypeWithRelations'
+      required:
+      - channelTypeId
+      - deviceId
+      - monitor
+      title: ChannelWithRelations
+      type: object
+    EventRuleWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        actionParameters: actionParameters
+        inProgress: true
+        scope: scope
+        description: description
+        action: action
+        rule: rule
+        id: 4.965218492984954
+        executionPeriod: 5.025004791520295
+        lastExecTimestamp: 2000-01-23T04:56:07.000+00:00
+        algorithm: algorithm
+        activated: true
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        description:
+          description: Rule description
+          type: string
+        scope:
+          description: Rule scope
+          type: string
+        algorithm:
+          description: Event Detection Algorithm
+          type: string
+        action:
+          description: Rule action
+          type: string
+        actionParameters:
+          description: Rule action parameters
+          type: string
+        rule:
+          description: JSON Rule
+          type: string
+        executionPeriod:
+          description: EventRule execution period - seconds
+          type: number
+        lastExecTimestamp:
+          description: Last execution timestamp
+          format: date-time
+          type: string
+        activated:
+          description: Is set to true when EventRule has been activated
+          type: boolean
+        inProgress:
+          description: Is automaticaly set to true when EventRule is being processed
+          type: boolean
+      required:
+      - action
+      - scope
+      title: EventRuleWithRelations
+      type: object
+    DeviceEventWithRelations:
+      additionalProperties: false
+      description: '(Schema options: { includeRelations: true })'
+      example:
+        severity: severity
+        eventRuleId: 5.962133916683182
+        channel:
+          lastTimestamp: 2000-01-23T04:56:07.000+00:00
+          channelTypeId: 1.1730742509559433
+          monitor: true
+          channelType:
+            unit: unit
+            deviceTypeId: 1.4894159098541704
+            name: name
+            description: description
+            channelType: channelType
+            id: 1.0246457001441578
+            category: category
+          id: 6.84685269835264
+          deviceId: 7.457744773683766
+          device:
+            deviceType:
+              channelTypes:
+              - unit: unit
+                deviceTypeId: 1.4894159098541704
+                name: name
+                description: description
+                channelType: channelType
+                id: 1.0246457001441578
+                category: category
+              - unit: unit
+                deviceTypeId: 1.4894159098541704
+                name: name
+                description: description
+                channelType: channelType
+                id: 1.0246457001441578
+                category: category
+              description: description
+              model: model
+              id: 1.2315135367772556
+              category: category
+              manufacturer: manufacturer
+            deviceTypeId: 7.061401241503109
+            dataLogger:
+              dataCompressed: true
+              autoInit: true
+              passwd: passwd
+              authToken: authToken
+              description: description
+              id: 9.301444243932576
+              connectionType: connectionType
+              config: config
+              userId: 3.616076749251911
+              user:
+                passwd: passwd
+                roles:
+                - roles
+                - roles
+                userCredentials:
+                  passwd: passwd
+                  id: 4.145608029883936
+                  userId: 7.386281948385884
+                id: 2.027123023002322
+                isVirtual: true
+                subscriptionReferenceCode: subscriptionReferenceCode
+                email: email
+                username: username
+              fileFormat: fileFormat
+              username: username
+            description: description
+            dataLoggerId: 2.3021358869347655
+            id: 5.637376656633329
+            serialNo: serialNo
+          status: status
+        eventRule:
+          actionParameters: actionParameters
+          inProgress: true
+          scope: scope
+          description: description
+          action: action
+          rule: rule
+          id: 4.965218492984954
+          executionPeriod: 5.025004791520295
+          lastExecTimestamp: 2000-01-23T04:56:07.000+00:00
+          algorithm: algorithm
+          activated: true
+        description: description
+        deviceId: 6.027456183070403
+        resolutionTimestamp: 2000-01-23T04:56:07.000+00:00
+        viewedBy: viewedBy
+        id: 0.8008281904610115
+        device:
+          deviceType:
+            channelTypes:
+            - unit: unit
+              deviceTypeId: 1.4894159098541704
+              name: name
+              description: description
+              channelType: channelType
+              id: 1.0246457001441578
+              category: category
+            - unit: unit
+              deviceTypeId: 1.4894159098541704
+              name: name
+              description: description
+              channelType: channelType
+              id: 1.0246457001441578
+              category: category
+            description: description
+            model: model
+            id: 1.2315135367772556
+            category: category
+            manufacturer: manufacturer
+          deviceTypeId: 7.061401241503109
+          dataLogger:
+            dataCompressed: true
+            autoInit: true
+            passwd: passwd
+            authToken: authToken
+            description: description
+            id: 9.301444243932576
+            connectionType: connectionType
+            config: config
+            userId: 3.616076749251911
+            user:
+              passwd: passwd
+              roles:
+              - roles
+              - roles
+              userCredentials:
+                passwd: passwd
+                id: 4.145608029883936
+                userId: 7.386281948385884
+              id: 2.027123023002322
+              isVirtual: true
+              subscriptionReferenceCode: subscriptionReferenceCode
+              email: email
+              username: username
+            fileFormat: fileFormat
+            username: username
+          description: description
+          dataLoggerId: 2.3021358869347655
+          id: 5.637376656633329
+          serialNo: serialNo
+        channelId: 1.4658129805029452
+        resolved: true
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        deviceId:
+          description: ID of Device associated with Event
+          type: number
+        channelId:
+          description: ID of Device associated with Event
+          type: number
+        eventRuleId:
+          description: ID of EventRule triggered
+          type: number
+        severity:
+          description: Event severity - Can be  LOW / MEDIUM / HIGH
+          type: string
+        description:
+          description: Event description
+          type: string
+        resolved:
+          description: Set to true if Event has been resolved
+          type: boolean
+        viewedBy:
+          description: Set to true if Event has been resolved
+          type: string
+        timestamp:
+          description: Event creation timestamp
+          format: date-time
+          type: string
+        resolutionTimestamp:
+          description: Event resolution timestamp
+          format: date-time
+          type: string
+        device:
+          $ref: '#/components/schemas/DeviceWithRelations'
+        channel:
+          $ref: '#/components/schemas/ChannelWithRelations'
+        eventRule:
+          $ref: '#/components/schemas/EventRuleWithRelations'
+      required:
+      - channelId
+      - deviceId
+      - eventRuleId
+      - resolved
+      - severity
+      - timestamp
+      - viewedBy
+      title: DeviceEventWithRelations
+      type: object
+    DeviceGroupMembership:
+      additionalProperties: false
+      example:
+        assetId: 6.027456183070403
+        id: 0.8008281904610115
+        deviceId: 1.4658129805029452
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        assetId:
+          description: ID of Device associated with Asset
+          type: number
+        deviceId:
+          description: ID of Device associated with Asset
+          type: number
+      required:
+      - assetId
+      - deviceId
+      title: DeviceGroupMembership
+      type: object
+    DeviceGroupMembershipExcluding_id_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'' ] })'
+      properties:
+        assetId:
+          description: ID of Device associated with Asset
+          type: number
+        deviceId:
+          description: ID of Device associated with Asset
+          type: number
+      required:
+      - assetId
+      - deviceId
+      title: DeviceGroupMembershipExcluding_id_
+      type: object
+    ChannelTypeExcluding_id-deviceTypeId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''deviceTypeId'' ] })'
+      properties:
+        name:
+          description: ChannelType name
+          type: string
+        category:
+          description: ChannelType category
+          type: string
+        description:
+          description: ChannelType description
+          type: string
+        unit:
+          description: Unit of measurement
+          type: string
+        channelType:
+          description: 'Type of data: UNDEFINED / SPOT_VALUE / COUNTER / TEXT'
+          type: string
+      required:
+      - channelType
+      - name
+      title: ChannelTypeExcluding_id-deviceTypeId_
+      type: object
+    ChannelTypeExcluding_name-description-unit-channelType-deviceTypeId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''name'', ''description'', ''unit'',
+        ''channelType'', ''deviceTypeId'' ] })'
+      example:
+        id: 0.8008281904610115
+        category: category
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        category:
+          description: ChannelType category
+          type: string
+      title: ChannelTypeExcluding_name-description-unit-channelType-deviceTypeId_
+      type: object
+    ChannelTypeExcluding_id-name-deviceTypeId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''name'', ''deviceTypeId''
+        ] })'
+      properties:
+        category:
+          description: ChannelType category
+          type: string
+        description:
+          description: ChannelType description
+          type: string
+        unit:
+          description: Unit of measurement
+          type: string
+        channelType:
+          description: 'Type of data: UNDEFINED / SPOT_VALUE / COUNTER / TEXT'
+          type: string
+      required:
+      - channelType
+      title: ChannelTypeExcluding_id-name-deviceTypeId_
+      type: object
+    DeviceType:
+      additionalProperties: false
+      example:
+        description: description
+        model: model
+        id: 0.8008281904610115
+        category: category
+        manufacturer: manufacturer
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        model:
+          description: DeviceType model
+          type: string
+        description:
+          description: DeviceType description
+          type: string
+        manufacturer:
+          description: DeviceType manufacturer
+          type: string
+        category:
+          description: DeviceType category
+          type: string
+      required:
+      - manufacturer
+      - model
+      title: DeviceType
+      type: object
+    DeviceTypeExcluding_model-description-manufacturer_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''model'', ''description'', ''manufacturer''
+        ] })'
+      example:
+        id: 0.8008281904610115
+        category: category
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        category:
+          description: DeviceType category
+          type: string
+      title: DeviceTypeExcluding_model-description-manufacturer_
+      type: object
+    DeviceTypeExcluding_id-model-manufacturer_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''model'', ''manufacturer''
+        ] })'
+      properties:
+        description:
+          description: DeviceType description
+          type: string
+        category:
+          description: DeviceType category
+          type: string
+      title: DeviceTypeExcluding_id-model-manufacturer_
+      type: object
+    DeviceExcluding_id-dataLoggerId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''dataLoggerId'' ] })'
+      properties:
+        description:
+          description: Device description
+          type: string
+        serialNo:
+          description: Device serial number
+          type: string
+        deviceTypeId:
+          type: number
+      required:
+      - serialNo
+      title: DeviceExcluding_id-dataLoggerId_
+      type: object
+    Channel:
+      additionalProperties: false
+      example:
+        lastTimestamp: 2000-01-23T04:56:07.000+00:00
+        channelTypeId: 1.4658129805029452
+        monitor: true
+        id: 0.8008281904610115
+        deviceId: 6.027456183070403
+        status: status
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        monitor:
+          description: Enable channel monitoring - data recording - by setting to
+            true
+          type: boolean
+        lastTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        status:
+          description: Channel Status
+          type: string
+        deviceId:
+          description: ID of Device that Channel belongs to
+          type: number
+        channelTypeId:
+          description: ID of ChannelType associated with Channel
+          type: number
+      required:
+      - channelTypeId
+      - deviceId
+      - monitor
+      title: Channel
+      type: object
+    ChannelExcluding_id-deviceId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''deviceId'' ] })'
+      properties:
+        monitor:
+          description: Enable channel monitoring - data recording - by setting to
+            true
+          type: boolean
+        lastTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        status:
+          description: Channel Status
+          type: string
+        channelTypeId:
+          description: ID of ChannelType associated with Channel
+          type: number
+      required:
+      - channelTypeId
+      - monitor
+      title: ChannelExcluding_id-deviceId_
+      type: object
+    DeviceWithType:
+      additionalProperties: false
+      example:
+        deviceType:
+          description: description
+          model: model
+          id: 0.8008281904610115
+          category: category
+          manufacturer: manufacturer
+        device:
+          deviceTypeId: 2.3021358869347655
+          description: description
+          dataLoggerId: 5.637376656633329
+          id: 5.962133916683182
+          serialNo: serialNo
+      properties:
+        deviceType:
+          $ref: '#/components/schemas/DeviceType'
+        device:
+          $ref: '#/components/schemas/Device'
+      required:
+      - device
+      - deviceType
+      title: DeviceWithType
+      type: object
+    DeviceExcluding_description-serialNo-dataLoggerId-deviceTypeId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''description'', ''serialNo'', ''dataLoggerId'',
+        ''deviceTypeId'' ] })'
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+      title: DeviceExcluding_description-serialNo-dataLoggerId-deviceTypeId_
+      type: object
+    DeviceExcluding_id-serialNo-dataLoggerId-deviceTypeId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''serialNo'', ''dataLoggerId'',
+        ''deviceTypeId'' ] })'
+      properties:
+        description:
+          description: Device description
+          type: string
+      title: DeviceExcluding_id-serialNo-dataLoggerId-deviceTypeId_
+      type: object
+    Event:
+      additionalProperties: false
+      example:
+        severity: severity
+        resolutionTimestamp: 2000-01-23T04:56:07.000+00:00
+        assetId: 6.027456183070403
+        eventRuleId: 1.4658129805029452
+        description: description
+        id: 0.8008281904610115
+        resolved: true
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        assetId:
+          description: ID of Asset associated with Event
+          type: number
+        eventRuleId:
+          description: ID of EventRule triggered
+          type: number
+        severity:
+          description: Event severity - Can be  LOW / MEDIUM / HIGH
+          type: string
+        description:
+          description: Event description
+          type: string
+        resolved:
+          description: Set to true if Event has been resolved
+          type: boolean
+        timestamp:
+          description: Event creation timestamp
+          format: date-time
+          type: string
+        resolutionTimestamp:
+          description: Event resolution timestamp
+          format: date-time
+          type: string
+      required:
+      - assetId
+      - eventRuleId
+      - resolved
+      - severity
+      - timestamp
+      title: Event
+      type: object
+    EventExcluding_id-resolved-timestamp-resolutionTimestamp_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''resolved'', ''timestamp'',
+        ''resolutionTimestamp'' ] })'
+      properties:
+        assetId:
+          description: ID of Asset associated with Event
+          type: number
+        eventRuleId:
+          description: ID of EventRule triggered
+          type: number
+        severity:
+          description: Event severity - Can be  LOW / MEDIUM / HIGH
+          type: string
+        description:
+          description: Event description
+          type: string
+      required:
+      - assetId
+      - eventRuleId
+      - severity
+      title: EventExcluding_id-resolved-timestamp-resolutionTimestamp_
+      type: object
+    EventRelatedDevice:
+      additionalProperties: false
+      example:
+        eventId: 1.4658129805029452
+        id: 0.8008281904610115
+        deviceId: 6.027456183070403
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        deviceId:
+          description: ID of Device associated with Event
+          type: number
+        eventId:
+          description: ID of Event
+          type: number
+      required:
+      - deviceId
+      - eventId
+      title: EventRelatedDevice
+      type: object
+    EventRelatedDeviceExcluding_id_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'' ] })'
+      properties:
+        deviceId:
+          description: ID of Device associated with Event
+          type: number
+        eventId:
+          description: ID of Event
+          type: number
+      required:
+      - deviceId
+      - eventId
+      title: EventRelatedDeviceExcluding_id_
+      type: object
+    ResponseEventAssetEvents:
+      additionalProperties: false
+      example:
+        eventRelatedDevice:
+        - eventId: 1.4658129805029452
+          id: 0.8008281904610115
+          deviceId: 6.027456183070403
+        - eventId: 1.4658129805029452
+          id: 0.8008281904610115
+          deviceId: 6.027456183070403
+        event:
+          severity: severity
+          resolutionTimestamp: 2000-01-23T04:56:07.000+00:00
+          assetId: 6.027456183070403
+          eventRuleId: 1.4658129805029452
+          description: description
+          id: 0.8008281904610115
+          resolved: true
+          timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+        eventRelatedDevice:
+          items:
+            $ref: '#/components/schemas/EventRelatedDevice'
+          type: array
+      required:
+      - event
+      - eventRelatedDevice
+      title: ResponseEventAssetEvents
+      type: object
+    EventRule:
+      additionalProperties: false
+      example:
+        actionParameters: actionParameters
+        inProgress: true
+        scope: scope
+        description: description
+        action: action
+        rule: rule
+        id: 0.8008281904610115
+        executionPeriod: 6.027456183070403
+        lastExecTimestamp: 2000-01-23T04:56:07.000+00:00
+        algorithm: algorithm
+        activated: true
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        description:
+          description: Rule description
+          type: string
+        scope:
+          description: Rule scope
+          type: string
+        algorithm:
+          description: Event Detection Algorithm
+          type: string
+        action:
+          description: Rule action
+          type: string
+        actionParameters:
+          description: Rule action parameters
+          type: string
+        rule:
+          description: JSON Rule
+          type: string
+        executionPeriod:
+          description: EventRule execution period - seconds
+          type: number
+        lastExecTimestamp:
+          description: Last execution timestamp
+          format: date-time
+          type: string
+        activated:
+          description: Is set to true when EventRule has been activated
+          type: boolean
+        inProgress:
+          description: Is automaticaly set to true when EventRule is being processed
+          type: boolean
+      required:
+      - action
+      - scope
+      title: EventRule
+      type: object
+    RequestEventRuleScope:
+      additionalProperties: false
+      example:
+        channelTypeCategory: channelTypeCategory
+        deviceTypeCategory: deviceTypeCategory
+      properties:
+        deviceTypeCategory:
+          description: deviceType.Category that rule aplies to
+          type: string
+        channelTypeCategory:
+          description: channelType.Categoy that rule aplies to
+          type: string
+      required:
+      - channelTypeCategory
+      - deviceTypeCategory
+      title: RequestEventRuleScope
+      type: object
+    RequestEventCreateRule:
+      additionalProperties: false
+      example:
+        actionParameters: '{}'
+        scope:
+        - channelTypeCategory: channelTypeCategory
+          deviceTypeCategory: deviceTypeCategory
+        - channelTypeCategory: channelTypeCategory
+          deviceTypeCategory: deviceTypeCategory
+        description: description
+        action: action
+      properties:
+        description:
+          description: Rule description
+          type: string
+        scope:
+          items:
+            $ref: '#/components/schemas/RequestEventRuleScope'
+          type: array
+        action:
+          description: Rule action
+          type: string
+        actionParameters:
+          description: Action Parameters
+          type: object
+      required:
+      - action
+      - actionParameters
+      - description
+      - scope
+      title: RequestEventCreateRule
+      type: object
+    EventRuleSubscription:
+      additionalProperties: false
+      example:
+        assetId: 1.4658129805029452
+        eventRuleId: 5.962133916683182
+        ruleActivated: true
+        id: 0.8008281904610115
+        executionPeriod: 6.027456183070403
+        lastExecTimestamp: lastExecTimestamp
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        executionPeriod:
+          description: EventRule execution period - seconds
+          type: number
+        lastExecTimestamp:
+          description: Last execution timestamp
+          type: string
+        assetId:
+          description: ID of Asset subscribed to EventRule
+          type: number
+        eventRuleId:
+          description: ID of associated EventRule
+          type: number
+        ruleActivated:
+          description: Is set to true when EventRule has been activated
+          type: boolean
+      required:
+      - assetId
+      - eventRuleId
+      - executionPeriod
+      - ruleActivated
+      title: EventRuleSubscription
+      type: object
+    EventRuleSubscriptionExcluding_id-lastExecTimestamp_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''lastExecTimestamp'' ]
+        })'
+      properties:
+        executionPeriod:
+          description: EventRule execution period - seconds
+          type: number
+        assetId:
+          description: ID of Asset subscribed to EventRule
+          type: number
+        eventRuleId:
+          description: ID of associated EventRule
+          type: number
+        ruleActivated:
+          description: Is set to true when EventRule has been activated
+          type: boolean
+      required:
+      - assetId
+      - eventRuleId
+      - executionPeriod
+      - ruleActivated
+      title: EventRuleSubscriptionExcluding_id-lastExecTimestamp_
+      type: object
+    UserSubscription:
+      additionalProperties: false
+      example:
+        activationTimestamp: 2000-01-23T04:56:07.000+00:00
+        creationTimestamp: 2000-01-23T04:56:07.000+00:00
+        discount: 6.027456183070403
+        id: 0.8008281904610115
+        referenceCode: referenceCode
+        subscriptionId: 1.4658129805029452
+        endTimestamp: 2000-01-23T04:56:07.000+00:00
+        email: email
+        hasRegistered: true
+      properties:
+        id:
+          type: number
+        referenceCode:
+          type: string
+        email:
+          type: string
+        discount:
+          type: number
+        creationTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        activationTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        endTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        hasRegistered:
+          type: boolean
+        subscriptionId:
+          description: ID of Subscription
+          type: number
+      required:
+      - creationTimestamp
+      - discount
+      - hasRegistered
+      - referenceCode
+      - subscriptionId
+      title: UserSubscription
+      type: object
+    SubscriptionWithRelations:
+      additionalProperties: false
+      description: '(tsType: SubscriptionWithRelations, schemaOptions: { includeRelations:
+        true })'
+      example:
+        duration: 5.637376656633329
+        yearlyPrice: 7.061401241503109
+        product: product
+        description: description
+        active: true
+        userSubscriptions:
+        - null
+        - null
+        id: 5.962133916683182
+        type: type
+        monthlyPrice: 2.3021358869347655
+      properties:
+        id:
+          type: number
+        product:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        duration:
+          type: number
+        monthlyPrice:
+          type: number
+        yearlyPrice:
+          type: number
+        active:
+          type: boolean
+        userSubscriptions:
+          items:
+            $ref: '#/components/schemas/UserSubscriptionWithRelations'
+          type: array
+      required:
+      - active
+      - description
+      - duration
+      - monthlyPrice
+      - product
+      - yearlyPrice
+      title: SubscriptionWithRelations
+      type: object
+      x-typescript-type: SubscriptionWithRelations
+    UserSubscriptionWithRelations:
+      additionalProperties: false
+      description: '(tsType: UserSubscriptionWithRelations, schemaOptions: { includeRelations:
+        true })'
+      example:
+        activationTimestamp: 2000-01-23T04:56:07.000+00:00
+        creationTimestamp: 2000-01-23T04:56:07.000+00:00
+        discount: 6.027456183070403
+        id: 0.8008281904610115
+        subscription:
+          duration: 5.637376656633329
+          yearlyPrice: 7.061401241503109
+          product: product
+          description: description
+          active: true
+          userSubscriptions:
+          - null
+          - null
+          id: 5.962133916683182
+          type: type
+          monthlyPrice: 2.3021358869347655
+        referenceCode: referenceCode
+        subscriptionId: 1.4658129805029452
+        endTimestamp: 2000-01-23T04:56:07.000+00:00
+        email: email
+        hasRegistered: true
+      properties:
+        id:
+          type: number
+        referenceCode:
+          type: string
+        email:
+          type: string
+        discount:
+          type: number
+        creationTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        activationTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        endTimestamp:
+          description: Timestamp
+          format: date-time
+          type: string
+        hasRegistered:
+          type: boolean
+        subscriptionId:
+          description: ID of Subscription
+          type: number
+        subscription:
+          $ref: '#/components/schemas/SubscriptionWithRelations'
+      required:
+      - creationTimestamp
+      - discount
+      - hasRegistered
+      - referenceCode
+      - subscriptionId
+      title: UserSubscriptionWithRelations
+      type: object
+      x-typescript-type: UserSubscriptionWithRelations
+    Subscription:
+      additionalProperties: false
+      example:
+        duration: 6.027456183070403
+        yearlyPrice: 5.962133916683182
+        product: product
+        description: description
+        active: true
+        id: 0.8008281904610115
+        type: type
+        monthlyPrice: 1.4658129805029452
+      properties:
+        id:
+          type: number
+        product:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        duration:
+          type: number
+        monthlyPrice:
+          type: number
+        yearlyPrice:
+          type: number
+        active:
+          type: boolean
+      required:
+      - active
+      - description
+      - duration
+      - monthlyPrice
+      - product
+      - yearlyPrice
+      title: Subscription
+      type: object
+    CodeVerificationRequest:
+      additionalProperties: false
+      example:
+        apiKey: apiKey
+        userEmail: userEmail
+        referenceCode: referenceCode
+      properties:
+        apiKey:
+          type: string
+        referenceCode:
+          type: string
+        userEmail:
+          type: string
+      required:
+      - apiKey
+      - referenceCode
+      - userEmail
+      title: CodeVerificationRequest
+      type: object
+    PingResponse:
+      properties:
+        greeting:
+          type: string
+        date:
+          type: string
+        url:
+          type: string
+        headers:
+          additionalProperties: true
+          properties:
+            Content-Type:
+              type: string
+          type: object
+      title: PingResponse
+      type: object
+    Token:
+      additionalProperties: false
+      example:
+        token: token
+      properties:
+        token:
+          description: Access Token
+          type: string
+      required:
+      - token
+      title: Token
+      type: object
+    UserExcluding_id-email-isVirtual-roles-subscriptionReferenceCode_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''email'', ''isVirtual'',
+        ''roles'', ''subscriptionReferenceCode'' ] })'
+      properties:
+        username:
+          description: Username
+          type: string
+        passwd:
+          description: Password
+          type: string
+      required:
+      - username
+      title: UserExcluding_id-email-isVirtual-roles-subscriptionReferenceCode_
+      type: object
+    User:
+      additionalProperties: false
+      example:
+        passwd: passwd
+        roles:
+        - roles
+        - roles
+        id: 0.8008281904610115
+        isVirtual: true
+        subscriptionReferenceCode: subscriptionReferenceCode
+        email: email
+        username: username
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        username:
+          description: Username
+          type: string
+        passwd:
+          description: Password
+          type: string
+        email:
+          description: Email
+          type: string
+        roles:
+          items:
+            type: string
+          type: array
+        isVirtual:
+          description: Automatically assigned flag to select if User is virtual or
+            not
+          type: boolean
+        subscriptionReferenceCode:
+          type: string
+      required:
+      - email
+      - isVirtual
+      - username
+      title: User
+      type: object
+    UserExcluding_id-username-isVirtual-roles-subscriptionReferenceCode_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''id'', ''username'', ''isVirtual'',
+        ''roles'', ''subscriptionReferenceCode'' ] })'
+      properties:
+        passwd:
+          description: Password
+          type: string
+        email:
+          description: Email
+          type: string
+      required:
+      - email
+      title: UserExcluding_id-username-isVirtual-roles-subscriptionReferenceCode_
+      type: object
+    UserExcluding_passwd-email-roles-isVirtual-subscriptionReferenceCode_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''passwd'', ''email'', ''roles'',
+        ''isVirtual'', ''subscriptionReferenceCode'' ] })'
+      example:
+        id: 0.8008281904610115
+        username: username
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        username:
+          description: Username
+          type: string
+      required:
+      - username
+      title: UserExcluding_passwd-email-roles-isVirtual-subscriptionReferenceCode_
+      type: object
+    VirtualAccess:
+      additionalProperties: false
+      example:
+        virtualRelationId: 6.027456183070403
+        assetId: 1.4658129805029452
+        id: 0.8008281904610115
+      properties:
+        id:
+          description: Automatically generated ID
+          type: number
+        virtualRelationId:
+          description: ID of VirtualRelation
+          type: number
+        assetId:
+          description: ID of Asset associated with VirtualRelation
+          type: number
+      required:
+      - assetId
+      - virtualRelationId
+      title: VirtualAccess
+      type: object
+    RequestVirtualAccessRightExcluding_assetGroupId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''assetGroupId'' ] })'
+      properties:
+        userId:
+          description: Id of user to grant access to asset
+          type: number
+        assetId:
+          description: Id of asset
+          type: number
+      required:
+      - userId
+      title: RequestVirtualAccessRightExcluding_assetGroupId_
+      type: object
+    RequestVirtualAccessRight:
+      additionalProperties: false
+      properties:
+        userId:
+          description: Id of user to grant access to asset
+          type: number
+        assetId:
+          description: Id of asset
+          type: number
+        assetGroupId:
+          description: Id of asset group
+          type: number
+      required:
+      - userId
+      title: RequestVirtualAccessRight
+      type: object
+    RequestVirtualAccessRightExcluding_assetId_:
+      additionalProperties: false
+      description: '(Schema options: { exclude: [ ''assetId'' ] })'
+      properties:
+        userId:
+          description: Id of user to grant access to asset
+          type: number
+        assetGroupId:
+          description: Id of asset group
+          type: number
+      required:
+      - userId
+      title: RequestVirtualAccessRightExcluding_assetId_
+      type: object
+    loopback_Count:
+      example:
+        count: 0.8008281904610115
+      properties:
+        count:
+          type: number
+    inline_response_200:
+      example:
+        date: date
+        headers:
+          key: '{}'
+        greeting: greeting
+        url: url
+      properties:
+        greeting:
+          type: string
+        date:
+          type: string
+        url:
+          type: string
+        headers:
+          additionalProperties: true
+          properties:
+            Content-Type:
+              type: string
+          type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: openapi_server.controllers.security_controller_.info_from_bearerAuth
